@@ -1,5 +1,6 @@
 %jl_value_t = type { %jl_value_t* }
 
+; Function Attrs: sspreq
 define void @gemm_restricted(%jl_value_t*, %jl_value_t*, %jl_value_t*) {
 top:
   %3 = bitcast %jl_value_t* %0 to float**
@@ -17,9 +18,6 @@ top:
   %15 = getelementptr inbounds %jl_value_t, %jl_value_t* %2, i64 3, i32 0
   %16 = bitcast %jl_value_t** %15 to i64*
   %17 = load i64, i64* %16, align 8
-
-
-
   %18 = icmp sgt i64 %7, 0
   %19 = select i1 %18, i64 %7, i64 0
   br label %L
