@@ -1,5 +1,6 @@
 %jl_value_t = type { %jl_value_t* }
 
+; Function Attrs: sspreq
 define void @gemm(%jl_value_t*, %jl_value_t*, %jl_value_t*) {
 top:
   %3 = bitcast %jl_value_t* %0 to float**
