@@ -14,4 +14,4 @@ O = 1024
 A = zeros(Float32,M,N,O)
 B = zeros(Float32,M,N)
 
-println(time(@benchmark sum3d!(A,B) samples=1 evals=5))
+println(time(@benchmark sum3d!(A,B) samples=1 evals=1))
