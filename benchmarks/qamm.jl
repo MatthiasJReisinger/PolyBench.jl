@@ -1,6 +1,6 @@
 using BenchmarkTools
 
-@polly function gemm_restricted!(A,B,C)
+@polly function qamm!(A,B,C)
     n,o = size(A)
     m,o = size(B)
     @inbounds for i=1:n, j=1:n, k=1:n
@@ -16,4 +16,4 @@ A = zeros(Float32,N,O)
 B = zeros(Float32,M,O)
 C = zeros(Float32,N,M)
 
-println(time(@benchmark gemm_restricted!(A,B,C) samples=1 evals=5))
+println(time(@benchmark qamm!(A,B,C) samples=1 evals=5))
