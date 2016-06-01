@@ -1,7 +1,7 @@
 %jl_value_t = type { %jl_value_t* }
 
 ; Function Attrs: sspreq
-define void @gemm_restricted(%jl_value_t*, %jl_value_t*, %jl_value_t*) {
+define void @qemm(%jl_value_t*, %jl_value_t*, %jl_value_t*) {
 top:
   %3 = bitcast %jl_value_t* %0 to float**
   %4 = load float*, float** %3, align 8
