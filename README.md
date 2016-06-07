@@ -7,6 +7,13 @@ The goal that I have in mind for this package is to provide a collection of benc
 | Benchmark         | Description                                            |
 | ----------------- | ------------------------------------------------------ |
 | `gemm`            | General matrix multiplication                          |
-| `qamm`            | Matrix multiplication restricted to quadratic matrices |
+| `sqmm`            | Matrix multiplication restricted to square matrices    |
 | `row_sum`         | Sum of rows in a matrix                                |
-| `sum3d`           | Sum of elements in 3rd dimension of a 3d-matrix        |
+| `sum3d`           | Sum of elements in a 3d array                          |
+| `sum3d_cube`      | Sum of elements in a 3d cubic array                    |
+| `sum2d`           | Sum of elements in a matrix                            |
+| `sum2d_squre`     | Sum of elements in a square matrix                     |
+| `copy3d`          | Copying a 3d array                                     |
+| `copy3d_cube`     | Copying a 3d cubic array                               |
+| `copy2d`          | Copying a matrix                                       |
+| `copy2d_square`   | Copying a square matrix                                |
