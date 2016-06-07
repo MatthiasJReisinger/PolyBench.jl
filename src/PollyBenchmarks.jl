@@ -20,27 +20,44 @@ end
 end
 
 @polly function row_sum!(A,B)
-    m = size(A)
-    n,o = size(B)
-    @inbounds for i=1:n, j=1:o
+    m,n = size(B)
+    @inbounds for i=1:m, j=1:n
         A[i] += B[i,j]
     end
 end
 
 @polly function sum3d(A)
-    a = 0
+    a = zero(eltype(A))
     m,n,o = size(A)
-    @inbounds for i=1:m, j=1:n, k=1:o
+    @inbounds for k=1:o, j=1:n, i=1:m
         a += A[i,j,k]
     end
     return a
 end
 
 @polly function sum3d_cube(A)
-    a = 0
+    a = zero(eltype(A))
     m,n,o = size(A)
-    @inbounds for i=1:m, j=1:n, k=1:o
+    @inbounds for k=1:m, j=1:m, i=1:m
         a += A[i,j,k]
+    end
+    return a
+end
+
+@polly function sum2d(A)
+    a = zero(eltype(A))
+    m,n = size(A)
+    @inbounds for i=1:m, j=1:n
+        a += A[i,j]
+    end
+    return a
+end
+
+@polly function sum2d_square(A)
+    a = zero(eltype(A))
+    m,n = size(A)
+    @inbounds for i=1:m, j=1:m
+        a += A[i,j]
     end
     return a
 end
@@ -80,6 +97,7 @@ end
 
 macro benchmark(ex, evals)
     quote
+        $(esc(ex)) # force compilation
         start_time = time()
         for i = 1:$evals
             $(esc(ex))
@@ -106,6 +124,8 @@ function run()
     @benchmark(row_sum!(big2d1,big2d2), 1000)
     @benchmark(sum3d(big3d), 1)
     @benchmark(sum3d_cube(big3d), 1)
+    @benchmark(sum2d(big2d1), 100)
+    @benchmark(sum2d_square(big2d1), 100)
     @benchmark(copy3d!(small3d1,small3d2), 1)
     @benchmark(copy3d_cube!(small3d1,small3d2), 1)
     @benchmark(copy2d!(big2d1,big2d2), 1000)
