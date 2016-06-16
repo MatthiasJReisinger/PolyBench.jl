@@ -222,12 +222,129 @@ end
 ##########################
 
 @polly function kernel_cholesky(A)
-    n,n = size(A)
+    n = size(A,1)
+    for i = 1:n
+        # j < i
+        for j = 1:(i-1)
+            for k = 1:(j-1)
+                A[k,j] -= A[i,k] * A[j,k]
+            end
+            A[i,j] /= A[j,j]
+        end
+        # i == j case
+        for k = 1:(i-1)
+            A[i,i] -= A[i,k] * A[i,k]
+        end
+        A[i,i] = sqrt(A[i,i])
+    end
+end
+
+@polly function kernel_durbin(r, y)
+    n = size(r,1)
+    y[1] = -r[1]
+    beta = one(eltype(y))
+    alpha = -r[1]
+
+    for k = 2:n
+        beta = (1 - alpha * alpha) * beta
+        sum = zero(eltype(y))
+        for i = 1:(k-1)
+            sum += r[k-i-1] * y[i]
+        end
+        alpha = - (r[k] + sum)/beta
+
+        for i = 1:(k-1)
+            z[i] = y[i] + alpha * y[k-i-1]
+        end
+        for i = 1:(k-1)
+            y[i] = z[i]
+        end
+        y[k] = alpha
+    end
+end
+
+@polly function kernel_gramschmidt(A,R,Q)
+    m,n = size(A)
+    for k = 1:n
+        nrm = zero(eltype(A))
+        for i = 1:m
+            nrm += A[i,k] * A[i,k]
+        end
+        R[k,k] = sqrt(nrm)
+        for i = 1:m
+            Q[i,k] = A[i,k] / R[k,k]
+        end
+        for j = (k+1):n
+            R[k,j] = zero(eltype(R))
+            for i = 1:m
+                R[k,j] += Q[i,k] * A[i,j]
+            end
+            for i = 1:m
+                A[i,j] = A[i,j] - Q[i,k] * R[k,j]
+            end
+        end
+    end
+end
+
+@polly function kernel_lu(A)
+    n = size(A,1)
     for i = 1:n
         for j = 1:(i-1)
             for k = 1:(j-1)
+                A[i,j] -= A[i,k] * A[k,j]
             end
+            A[i,j] /= A[j,j]
         end
+        for j = i:n, k = 1:(i-1)
+            A[i,j] -= A[i,k] * A[k,j]
+        end
+    end
+end
+
+@polly function kernel_ludcmp(A, b, x, y)
+    n = size(A,1)
+
+    for i = 1:n
+        for j = 1:(i-1)
+            w = A[i,j]
+            for k = 1:(j-1)
+                w -= A[i,k] * A[k,j]
+            end
+            A[i,j] = w / A[j,j]
+        end
+        for j = i:n
+            w = A[i,j]
+            for k = 1:(i-1)
+                w -= A[i,k] * A[k,j]
+            end
+            A[i,j] = w
+        end
+    end
+
+    for i = 1:n
+        w = b[i]
+        for j = 1:(i-1)
+            w -= A[i,j] * y[j]
+        end
+        y[i] = w
+    end
+
+    for i = n:-1:1
+        w = y[i]
+        for j = (i+1):n
+            w -= A[i,j] * x[j]
+        end
+        x[i] = w / A[i,i]
+    end
+end
+
+@polly function kernel_trisolv(L, x, b)
+    for i = 1:n
+        x[i] = b[i]
+        for j = 1:(i-1)
+            x[i] -= L[i,j] * x[j]
+        end
+        x[i] = x[i] / L[i,i]
     end
 end
 
