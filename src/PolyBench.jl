@@ -417,7 +417,116 @@ end
     end
 end
 
+##########
+# medely #
+##########
+
+@polly function kernel_deriche(alpha, imgIn, imgOut, y1, y2)
+    w,h = size(imgIn)
+
+    k = (1.0-exp(-alpha))*(1.0-exp(-alpha))/(1.0+2.0*alpha*exp(-alpha)-exp(2.0*alpha))
+    a1 = a5 = k
+    a2 = a6 = k*exp(-alpha)*(alpha-1.0)
+    a3 = a7 = k*exp(-alpha)*(alpha+1.0)
+    a4 = a8 = -k*exp(-2.0*alpha)
+    b1 = 2.0^(-alpha)
+    b2 = -exp(-2.0*alpha)
+    c1 = c2 = 1
+
+    for i = 1:w
+        ym1 = 0.0;
+        ym2 = 0.0;
+        xm1 = 0.0;
+        for j = 1:h
+            y1[i,j] = a1*imgIn[i][j] + a2*xm1 + b1*ym1 + b2*ym2
+            xm1 = imgIn[i,j]
+            ym2 = ym1
+            ym1 = y1[i,j]
+        end
+    end
+
+    for i = 1:w
+        yp1 = 0.0
+        yp2 = 0.0
+        xp1 = 0.0
+        xp2 = 0.0
+        for j = h:-1:1
+            y2[i,j] = a3*xp1 + a4*xp2 + b1*yp1 + b2*yp2
+            xp2 = xp1
+            xp1 = imgIn[i,j]
+            yp2 = yp1
+            yp1 = y2[i,j]
+        end
+    end
+
+    for i = 1:w, j = 1:h
+        imgOut[i,j] = c1 * (y1[i,j] + y2[i,j])
+    end
+
+    for j = 1:h
+        tm1 = 0.0
+        ym1 = 0.0
+        ym2 = 0.0
+        for i = 1:w
+            y1[i,j] = a5*imgOut[i,j] + a6*tm1 + b1*ym1 + b2*ym2
+            tm1 = imgOut[i,j]
+            ym2 = ym1
+            ym1 = y1[i,j]
+        end
+    end
 
 
+    for j = 1:h
+        tp1 = 0.0
+        tp2 = 0.0
+        yp1 = 0.0
+        yp2 = 0.0
+        for i = w:-1:1
+            y2[i,j] = a7*tp1 + a8*tp2 + b1*yp1 + b2*yp2
+            tp2 = tp1
+            tp1 = imgOut[i,j]
+            yp2 = yp1
+            yp1 = y2[i,j]
+        end
+    end
+
+    for i=1:w, j=1:h
+        imgOut[i,j] = c2*(y1[i,j] + y2[i,j])
+    end
+end
+
+@polly function kernel_floyd_warshall(path)
+    n = size(path,1)
+    for k = 1:n, i = 1:n, j = 1:n
+        path[i,j] = path[i,j] < path[i,k] + path[k,j] ? path[i,j] : path[i,k] + path[k,j]
+    end
+end
+
+@polly function kernel_nussinov(seq, table)
+    n = size(seq,1)
+
+    for i = n:-1:1, j = i+1:n
+        if (j-1) >= 1
+            table[i,j] = max(table[i,j], table[i,j-1])
+        end
+
+        if (i+1) <= n
+            table[i,j] = max(table[i,j], table[i+1,j])
+        end
+
+        if (j-1) >= 1 && (i+1) <= n
+            # don't allow adjacent elements to bond */
+            if (i < j-1)
+                table[i,j] = max(table[i,j], table[i+1,j-1] + (seq[i] + seq[j] == 3 ? 1 : 0))
+            else
+                table[i,j] = max(table[i,j], table[i+1,j-1])
+            end
+        end
+
+        for k = (i+1):(j-1)
+            table[i,j] = max(table[i,j], table[i,k] + table[k+1,j])
+        end
+    end
+end
 
 end # module
