@@ -6,13 +6,10 @@ module PolyBench
 
 # D := alpha*A*B*C + beta*D
 @polly function kernel_2mm(alpha, beta, tmp, A, B, C, D)
-#function kernel_2mm(ni, nj, nk, nl,
-#        alpha, beta, tmp, A, B, C, D)
     ni,nk = size(A)
     nj,nl = size(C)
     for i = 1:ni, j = 1:nj
         tmp[i,j] = zero(eltype(tmp))
-#        tmp[i,j] = 0
         for k = 1:nk
             tmp[i,j] += alpha * A[i,k] * B[k,j]
         end
@@ -27,8 +24,6 @@ module PolyBench
 end
 
 # G = (A*B) * (C*D)
-#function kernel_3mm(ni, nj, nk, nl, nm,
-#        E, A, B, F, C, D, G)
 @polly function kernel_3mm(E, A, B, F, C, D, G)
     ni,nk = size(A)
     nk,nj = size(B)
