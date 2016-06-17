@@ -1,5 +1,77 @@
 module PolyBench
 
+##############
+# datamining #
+##############
+
+@polly function kernel_correlation(float_n, data, corr, mean, stddev)
+    n,m = size(data)
+    eps = 0.1;
+
+    for j = 1:m
+        mean[j] = zero(eltype(mean))
+        for i = 1:n
+            mean[j] += data[i,j]
+        end
+        mean[j] /= float_n
+    end
+
+    for j = 1:m
+        stddev[j] = zero(eltype(stddev))
+        for i = 1:n
+            stddev[j] += (data[i,j] - mean[j]) * (data[i,j] - mean[j])
+        end
+        stddev[j] /= float_n
+        stddev[j] = sqrt(stddev[j])
+        stddev[j] = stddev[j] <= eps ? one(eltype(stddev)) : stddev[j]
+    end
+
+    # Center and reduce the column vectors.
+    for i = 1:n, j = 1:m
+        data[i,j] -= mean[j]
+        data[i,j] /= sqrt(float_n) * stddev[j]
+    end
+
+    # Calculate the m * m correlation matrix.
+    for i = 1:(m-1)
+        corr[i,i] = one(eltype(corr))
+        for j = (i+1):m
+            corr[i,j] = one(eltype(corr))
+            for k = 1:n
+                corr[i,j] += (data[k,i] * data[k,j])
+            end
+            corr[j,i] = corr[i,j]
+        end
+    end
+
+    corr[m-1,m-1] = one(eltype(corr))
+end
+
+@polly function kernel_covariance(float_n, data, cov, mean)
+    n,m = size(data)
+
+    for j = 1:m
+        mean[j] = zero(eltype(mean))
+        for i = 1:n
+            mean[j] += data[i,j]
+        end
+        mean[j] /= float_n
+    end
+
+    for i = 1:n, j = 1:m
+        data[i,j] -= mean[j]
+    end
+
+    for i = 1:m, j = i:m
+        cov[i,j] = zero(eltype(cov))
+        for k = 1:n
+            cov[i,j] += data[k,i] * data[k,j]
+        end
+        cov[i,j] /= (float_n - one(eltype(cov)))
+        cov[j,i] = cov[i,j]
+    end
+end
+
 ##########################
 # linear-algebra/kernels #
 ##########################
@@ -344,5 +416,8 @@ end
         x[i] = x[i] / L[i,i]
     end
 end
+
+
+
 
 end # module
