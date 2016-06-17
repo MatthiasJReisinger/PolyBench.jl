@@ -236,6 +236,7 @@ end
 
 @polly function kernel_durbin(r, y)
     n = size(r,1)
+    z = zeros(eltype(r),n)
     y[1] = -r[1]
     beta = one(eltype(y))
     alpha = -r[1]
@@ -334,6 +335,7 @@ end
 end
 
 @polly function kernel_trisolv(L, x, b)
+    n = size(L,1)
     for i = 1:n
         x[i] = b[i]
         for j = 1:(i-1)
