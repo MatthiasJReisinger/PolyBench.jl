@@ -317,12 +317,12 @@ end
         beta = (1 - alpha * alpha) * beta
         sum = zero(eltype(y))
         for i = 1:(k-1)
-            sum += r[k-i-1] * y[i]
+            sum += r[k-i] * y[i]
         end
         alpha = - (r[k] + sum)/beta
 
         for i = 1:(k-1)
-            z[i] = y[i] + alpha * y[k-i-1]
+            z[i] = y[i] + alpha * y[k-i]
         end
         for i = 1:(k-1)
             y[i] = z[i]
@@ -438,7 +438,7 @@ end
         ym2 = 0.0;
         xm1 = 0.0;
         for j = 1:h
-            y1[i,j] = a1*imgIn[i][j] + a2*xm1 + b1*ym1 + b2*ym2
+            y1[i,j] = a1*imgIn[i,j] + a2*xm1 + b1*ym1 + b2*ym2
             xm1 = imgIn[i,j]
             ym2 = ym1
             ym1 = y1[i,j]
@@ -572,7 +572,7 @@ end
         for i = 2:(n-1)
             u[i,1] = 1.0
             p[i,1] = 0.0
-            q[i,1] = u[i,0]
+            q[i,1] = u[i,1]
             for j = 2:(n-1)
                 p[i,j] = -f / (d*p[i,j-1] + _e)
                 q[i,j] = (-a*v[i-1,j]+(1.0+2.0*a)*v[i,j] - c*v[i+1,j]-d*q[i,j-1])/(d*p[i,j-1]+_e)
