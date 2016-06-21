@@ -88,9 +88,9 @@ end
     end
 
     for i = 1:ni, j = 1:nl
-        D[i,j] *= beta;
+        D[i,j] *= beta
         for k = 1:nj
-            D[i,j] += tmp[i,k] * C[k,j];
+            D[i,j] += tmp[i,k] * C[k,j]
         end
     end
 end
