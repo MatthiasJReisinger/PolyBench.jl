@@ -10,4 +10,6 @@ llvm_ir = replace(llvm_ir, r"\) \#.*\{", "\) \{")
 llvm_ir = replace(llvm_ir, r".*call void .*llvm\.dbg.*\n", "")
 # removes metadata which is passed to instructions
 llvm_ir = replace(llvm_ir, r", \!dbg.*", "")
+# removes tbaa nodes
+llvm_ir = replace(llvm_ir, r", \!tbaa.*", "")
 print(llvm_ir)
