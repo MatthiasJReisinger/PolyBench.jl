@@ -606,7 +606,7 @@ end
     end
 end
 
-@polly function kernel_heat_3d(tsteps, A, B)
+@polly function kernel_hea3_3d(tsteps, A, B)
     n = size(A,1)
 
     for t = 1:tsteps
