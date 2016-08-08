@@ -76,4 +76,89 @@ end
     end
 end
 
+@polly function foo(l,u)
+    s = 0
+    for i=l:u
+        s += i
+    end
+    return s
+end
+
+@polly function unsigned_comp(n)
+    s = UInt(0)
+    for i = UInt(1):UInt(n)
+        s += i
+    end
+    return s
+end
+
+@polly function copy3d_unsigned!(A,B)
+    m,n,o = size(A)
+    for i=UInt(1):UInt(m), j=UInt(1):UInt(n), k=UInt(1):UInt(o)
+        A[i,j,k] = B[i,j,k]
+    end
+end
+
+@polly function parametric_unit_range(A,l,u)
+    for i=l:u
+        A[i] = 0
+    end
+end
+
+@polly function init1d!(A,n)
+    for i = 1:n
+        A[i] = zero(eltype(A))
+    end
+end
+
+@polly function init2d!(A,n,m)
+    for i = 1:n, j = 1:m
+        A[j,i] = zero(eltype(A))
+    end
+end
+
+#@polly function simple_branch(A,l)
+#    n = size(A,1)
+#    for i = 1:n
+#        if (i > oftype(i,l))
+#            A[i] = zero(eltype(A))
+#        else
+#            A[i] = one(eltype(A))
+#        end
+#    end
+#end
+#
+#@polly function complex_branch(A,l,u)
+#    n = size(A,1)
+#    for i = 1:n
+#        if (i > oftype(i,l)) & (i < oftype(i,u))
+#            A[i] = zero(eltype(A))
+#        else
+#            A[i] = one(eltype(A))
+#        end
+#    end
+#end
+#
+#@polly function shockingly_complex_branch(A,l,u,ne)
+#    n = size(A,1)
+#    for i = 1:n
+#        if (i > oftype(i,l)) & (i < oftype(i,u)) & (i != ne)
+#            A[i] = zero(eltype(A))
+#        else
+#            A[i] = one(eltype(A))
+#        end
+#    end
+#end
+#
+#@polly function complex_while(A,l,u)
+#    n = size(A,1)
+#    i = 1
+##    while (i > oftype(i,l)) & (i < oftype(i,u))
+#    while (i < oftype(i,u))
+#        A[i] = 0
+#        i += 1
+#    end
+#end
+
+
 end # module

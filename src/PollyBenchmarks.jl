@@ -1,7 +1,10 @@
-module PollyBenchmarks
-
 include("MicroBenchmarks.jl")
 include("PolyBench.jl")
+
+module PollyBenchmarks
+
+using MicroBenchmarks
+using PolyBench
 
 # Prints the time needed to execute `ex` in microseconds.
 macro benchmark(ex, evals)
@@ -51,7 +54,12 @@ function run()
 
     # Miscellaneous micro benchmarks
 
-    @benchmark(MicroBenchmarks.gemm!(big2d1,big2d2,big2d3),3)
+    @benchmark(MicroBenchmarks.simple_branch(big1d1,1),1)
+    @benchmark(MicroBenchmarks.simple_branch(zeros(Int64,1024),1),1)
+    @benchmark(MicroBenchmarks.complex_branch(big1d1,1,2),1)
+    @benchmark(MicroBenchmarks.shockingly_complex_branch(big1d1,1,2,3),1)
+    @benchmark(MicroBenchmarks.complex_while(big1d1,1,2),1)
+    @benchmark(MicroBenchmarks.gemm!(big2d1,big2d2,big2d3),1)
     @benchmark(MicroBenchmarks.sqmm!(big2d1,big2d2,big2d3),3)
     @benchmark(MicroBenchmarks.copy3d!(small3d1,small3d2),1)
     @benchmark(MicroBenchmarks.copy3d_cube!(small3d1,small3d2),1)
@@ -63,14 +71,18 @@ function run()
     @benchmark(MicroBenchmarks.for_step_parametric(big1d1,1), 1)
     @benchmark(MicroBenchmarks.for_step_1_down(big1d1), 1)
     @benchmark(MicroBenchmarks.for_step_2_nested(big2d1), 1)
+    @benchmark(MicroBenchmarks.foo(big1d1,-2^63,1000), 1)
+    @benchmark(MicroBenchmarks.foo(-9223372036854775808,1000), 1)
+    @benchmark(MicroBenchmarks.copy3d_unsigned(small3d1,small3d2), 1)
+    @benchmark(MicroBenchmarks.init1d!(big1d1,big_dim), 1)
+    @benchmark(MicroBenchmarks.init2d!(big2d1,big_dim,big_dim), 1)
 
     # PolyBench datamining
 
     @benchmark(PolyBench.kernel_correlation(1.0,big2d1,big2d2,big1d1,big1d1),1)
     @benchmark(PolyBench.kernel_covariance(1.0,big2d1,big2d2,big1d1),1)
 
-    # PolyBench linear-algebra/kernels
-
+    # PolyBench linear-algebra/kernels #
     @benchmark(PolyBench.kernel_2mm(1.0,1.0,big2d1,big2d2,big2d3,big2d4,big2d5),1)
     @benchmark(PolyBench.kernel_3mm(big2d1,big2d2,big2d3,big2d4,big2d5,big2d6,big2d7),1)
     @benchmark(PolyBench.kernel_atax(big2d1,big1d1,big1d2,big1d3),1)
@@ -107,7 +119,7 @@ function run()
 
     @benchmark(PolyBench.kernel_adi(100,big2d1,big2d2,big2d3,big2d4),1)
     @benchmark(PolyBench.kernel_fdtd_2d(big2d1,big2d2,big2d3,big1d1),1)
-    @benchmark(PolyBench.kernel_heat_3d(1,small3d1,small3d2),1)
+    @benchmark(PolyBench.kernel_head_3d(1,small3d1,small3d2),1)
     @benchmark(PolyBench.kernel_jacobi_1d(100,big1d1,big1d2),1)
     @benchmark(PolyBench.kernel_jacobi_2d(100,big2d1,big2d2),1)
     @benchmark(PolyBench.kernel_seidel_2d(100,big2d1),1)
