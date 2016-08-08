@@ -3,126 +3,66 @@ include("PolyBench.jl")
 
 module PollyBenchmarks
 
+using BenchmarkTools
 using MicroBenchmarks
 using PolyBench
 
-# Prints the time needed to execute `ex` in microseconds.
-macro benchmark(ex, evals)
-    quote
-        $(esc(ex)) # force compilation
-        total_time = 0
-        for i = 1:$evals
-            start_time = time_ns()
-            $(esc(ex))
-            end_time = time_ns()
-            total_time += (end_time - start_time)
-        end
-        println(round(Int, total_time / 10^3 / $evals))
-    end
-end
+const SUITE = BenchmarkGroup()
+const MICRO_GROUP = addgroup!(SUITE, "micro")
+const POLY_GROUP = addgroup!(SUITE, "poly")
 
-function run()
+const TYPE = Float32 # TODO make configurable
+const DIMENSION = 1024 # TODO make configurable
+get_zero_1d() = zeros(TYPE,DIMENSION)
+get_zero_2d() = zeros(TYPE,DIMENSION,DIMENSION)
+get_zero_3d() = zeros(TYPE,DIMENSION,DIMENSION,DIMENSION)
 
-    # Input data for the benchmarks
+# PolyBench datamining
 
-    big_dim = 1024
-    small_dim = 256
+POLY_GROUP["correlation"] = @benchmarkable PolyBench.kernel_correlation(1.0,$(get_zero_2d()),$(get_zero_2d()),$(get_zero_1d()),$(get_zero_1d()))
+POLY_GROUP["covariance"] = @benchmarkable PolyBench.kernel_covariance(1.0,$(get_zero_2d()),$(get_zero_2d()),$(get_zero_1d()))
 
-    big1d1 = zeros(Float32,big_dim)
-    big1d2 = zeros(Float32,big_dim)
-    big1d3 = zeros(Float32,big_dim)
-    big1d4 = zeros(Float32,big_dim)
-    big1d5 = zeros(Float32,big_dim)
-    big1d6 = zeros(Float32,big_dim)
-    big1d7 = zeros(Float32,big_dim)
-    big1d8 = zeros(Float32,big_dim)
-    big2d1 = zeros(Float32,big_dim,big_dim)
-    big2d2 = zeros(Float32,big_dim,big_dim)
-    big2d3 = zeros(Float32,big_dim,big_dim)
-    big2d4 = zeros(Float32,big_dim,big_dim)
-    big2d5 = zeros(Float32,big_dim,big_dim)
-    big2d6 = zeros(Float32,big_dim,big_dim)
-    big2d7 = zeros(Float32,big_dim,big_dim)
-    big3d = zeros(Float32,big_dim,big_dim,big_dim)
+# PolyBench linear-algebra/kernels
 
-    small1d1 = zeros(Float32,small_dim)
-    small2d1 = zeros(Float32,small_dim,small_dim)
-    small3d1 = zeros(Float32,small_dim,small_dim,small_dim)
-    small3d2 = zeros(Float32,small_dim,small_dim,small_dim)
+POLY_GROUP["2mm"] = @benchmarkable PolyBench.kernel_2mm(1.0,1.0,$(get_zero_2d()),$(get_zero_2d()),$(get_zero_2d()),$(get_zero_2d()),$(get_zero_2d()))
+POLY_GROUP["3mm"] = @benchmarkable PolyBench.kernel_3mm($(get_zero_2d()),$(get_zero_2d()),$(get_zero_2d()),$(get_zero_2d()),$(get_zero_2d()),$(get_zero_2d()),$(get_zero_2d()))
+POLY_GROUP["atax"] = @benchmarkable PolyBench.kernel_atax($(get_zero_2d()),$(get_zero_1d()),$(get_zero_1d()),$(get_zero_1d()))
+POLY_GROUP["bicg"] = @benchmarkable PolyBench.kernel_bicg($(get_zero_2d()),$(get_zero_1d()),$(get_zero_1d()),$(get_zero_1d()),$(get_zero_1d()))
+POLY_GROUP["doitgen"] = @benchmarkable PolyBench.kernel_doitgen($(get_zero_3d()),$(get_zero_2d()),$(get_zero_1d()))
+POLY_GROUP["mvt"] = @benchmarkable PolyBench.kernel_mvt($(get_zero_1d()),$(get_zero_1d()),$(get_zero_1d()),$(get_zero_1d()),$(get_zero_2d()))
 
-    upperTriangular = UpperTriangular(zeros(Float32,big_dim,big_dim))
+# PolyBench linear-algebra/blas
 
-    # Miscellaneous micro benchmarks
+POLY_GROUP["gemm"] = @benchmarkable PolyBench.kernel_gemm(1,1,$(get_zero_2d()),$(get_zero_2d()),$(get_zero_2d()))
+POLY_GROUP["gemver"] = @benchmarkable PolyBench.kernel_gemver(1,1,$(get_zero_2d()),$(get_zero_1d()),$(get_zero_1d()),$(get_zero_1d()),$(get_zero_1d()),$(get_zero_1d()),$(get_zero_1d()),$(get_zero_1d()),$(get_zero_1d()))
+POLY_GROUP["gesummv"] = @benchmarkable PolyBench.kernel_gesummv(1,1,$(get_zero_2d()),$(get_zero_2d()),$(get_zero_1d()),$(get_zero_1d()),$(get_zero_1d()))
+POLY_GROUP["symm"] = @benchmarkable PolyBench.kernel_symm(1,1,$(get_zero_2d()),$(get_zero_2d()),$(get_zero_2d()))
+POLY_GROUP["syr2k"] = @benchmarkable PolyBench.kernel_syr2k(1,1,$(get_zero_2d()),$(get_zero_2d()),$(get_zero_2d()))
+POLY_GROUP["syrk"] = @benchmarkable PolyBench.kernel_syrk(1,1,$(get_zero_2d()),$(get_zero_2d()))
+POLY_GROUP["trmm"] = @benchmarkable PolyBench.kernel_trmm(1,$(get_zero_2d()),$(get_zero_2d()))
 
-    @benchmark(MicroBenchmarks.simple_branch(big1d1,1),1)
-    @benchmark(MicroBenchmarks.simple_branch(zeros(Int64,1024),1),1)
-    @benchmark(MicroBenchmarks.complex_branch(big1d1,1,2),1)
-    @benchmark(MicroBenchmarks.shockingly_complex_branch(big1d1,1,2,3),1)
-    @benchmark(MicroBenchmarks.complex_while(big1d1,1,2),1)
-    @benchmark(MicroBenchmarks.gemm!(big2d1,big2d2,big2d3),1)
-    @benchmark(MicroBenchmarks.sqmm!(big2d1,big2d2,big2d3),3)
-    @benchmark(MicroBenchmarks.copy3d!(small3d1,small3d2),1)
-    @benchmark(MicroBenchmarks.copy3d_cube!(small3d1,small3d2),1)
-    @benchmark(MicroBenchmarks.copy2d!(big2d1,big2d2),1000)
-    @benchmark(MicroBenchmarks.copy2d!(big2d1,upperTriangular),1000)
-    @benchmark(MicroBenchmarks.copy2d_triangular!(big2d1,upperTriangular),1000)
-    @benchmark(MicroBenchmarks.copy2d_square!(big2d1,big2d2),1000)
-    @benchmark(MicroBenchmarks.for_step_2_up(big1d1), 1)
-    @benchmark(MicroBenchmarks.for_step_parametric(big1d1,1), 1)
-    @benchmark(MicroBenchmarks.for_step_1_down(big1d1), 1)
-    @benchmark(MicroBenchmarks.for_step_2_nested(big2d1), 1)
-    @benchmark(MicroBenchmarks.foo(big1d1,-2^63,1000), 1)
-    @benchmark(MicroBenchmarks.foo(-9223372036854775808,1000), 1)
-    @benchmark(MicroBenchmarks.copy3d_unsigned(small3d1,small3d2), 1)
-    @benchmark(MicroBenchmarks.init1d!(big1d1,big_dim), 1)
-    @benchmark(MicroBenchmarks.init2d!(big2d1,big_dim,big_dim), 1)
+# PolyBench linear-algebra/solvers
 
-    # PolyBench datamining
+POLY_GROUP["cholesky"] = @benchmarkable PolyBench.kernel_cholesky($(get_zero_2d()))
+POLY_GROUP["durbin"] = @benchmarkable PolyBench.kernel_durbin($(get_zero_1d()),$(get_zero_1d()))
+POLY_GROUP["gramschmidt"] = @benchmarkable PolyBench.kernel_gramschmidt($(get_zero_2d()),$(get_zero_2d()),$(get_zero_2d()))
+POLY_GROUP["lu"] = @benchmarkable PolyBench.kernel_lu($(get_zero_2d()))
+POLY_GROUP["ludcmp"] = @benchmarkable PolyBench.kernel_ludcmp($(get_zero_2d()),$(get_zero_1d()),$(get_zero_1d()),$(get_zero_1d()))
+POLY_GROUP["trisolv"] = @benchmarkable PolyBench.kernel_trisolv($(get_zero_2d()),$(get_zero_1d()),$(get_zero_1d()))
 
-    @benchmark(PolyBench.kernel_correlation(1.0,big2d1,big2d2,big1d1,big1d1),1)
-    @benchmark(PolyBench.kernel_covariance(1.0,big2d1,big2d2,big1d1),1)
+# PolyBench medley
 
-    # PolyBench linear-algebra/kernels #
-    @benchmark(PolyBench.kernel_2mm(1.0,1.0,big2d1,big2d2,big2d3,big2d4,big2d5),1)
-    @benchmark(PolyBench.kernel_3mm(big2d1,big2d2,big2d3,big2d4,big2d5,big2d6,big2d7),1)
-    @benchmark(PolyBench.kernel_atax(big2d1,big1d1,big1d2,big1d3),1)
-    @benchmark(PolyBench.kernel_bicg(big2d1,big1d1,big1d2,big1d3,big1d4),1)
-    @benchmark(PolyBench.kernel_doitgen(small3d1,small2d1,small1d1),1)
-    @benchmark(PolyBench.kernel_mvt(big1d1,big1d2,big1d3,big1d4,big2d1),1)
+POLY_GROUP["deriche"] = @benchmarkable PolyBench.kernel_deriche(1.0,$(get_zero_2d()),$(get_zero_2d()),$(get_zero_2d()),$(get_zero_2d()))
+POLY_GROUP["floyd_warshall"] = @benchmarkable PolyBench.kernel_floyd_warshall($(get_zero_2d()))
+POLY_GROUP["nussinov"] = @benchmarkable PolyBench.kernel_nussinov($(get_zero_1d()),$(get_zero_2d()))
 
-    # PolyBench linear-algebra/blas
+# PolyBench stencils
 
-    @benchmark(PolyBench.kernel_gemm(1,1,big2d1,big2d2,big2d3),1)
-    @benchmark(PolyBench.kernel_gemver(1,1,big2d1,big1d1,big1d2,big1d3,big1d4,big1d5,big1d6,big1d7,big1d8),1)
-    @benchmark(PolyBench.kernel_gesummv(1,1,big2d1,big2d2,big1d1,big1d2,big1d3),1)
-    @benchmark(PolyBench.kernel_symm(1,1,big2d1,big2d2,big2d3),1)
-    @benchmark(PolyBench.kernel_syr2k(1,1,big2d1,big2d2,big2d3),1)
-    @benchmark(PolyBench.kernel_syrk(1,1,big2d1,big2d2),1)
-    @benchmark(PolyBench.kernel_trmm(1,big2d1,big2d2),1)
-
-    # PolyBench linear-algebra/solvers
-
-    @benchmark(PolyBench.kernel_cholesky(big2d1),1)
-    @benchmark(PolyBench.kernel_durbin(big1d1,big1d2),1)
-    @benchmark(PolyBench.kernel_gramschmidt(big2d1,big2d2,big2d3),1)
-    @benchmark(PolyBench.kernel_lu(big2d1),1)
-    @benchmark(PolyBench.kernel_ludcmp(big2d1,big1d1,big1d2,big1d3),1)
-    @benchmark(PolyBench.kernel_trisolv(big2d1,big1d1,big1d2),1)
-
-    # PolyBench medley
-
-    @benchmark(PolyBench.kernel_deriche(1.0,big2d1,big2d2,big2d3,big2d4),1)
-    @benchmark(PolyBench.kernel_floyd_warshall(big2d1),1)
-    @benchmark(PolyBench.kernel_nussinov(big1d1,big2d1),1)
-
-    # PolyBench stencils
-
-    @benchmark(PolyBench.kernel_adi(100,big2d1,big2d2,big2d3,big2d4),1)
-    @benchmark(PolyBench.kernel_fdtd_2d(big2d1,big2d2,big2d3,big1d1),1)
-    @benchmark(PolyBench.kernel_head_3d(1,small3d1,small3d2),1)
-    @benchmark(PolyBench.kernel_jacobi_1d(100,big1d1,big1d2),1)
-    @benchmark(PolyBench.kernel_jacobi_2d(100,big2d1,big2d2),1)
-    @benchmark(PolyBench.kernel_seidel_2d(100,big2d1),1)
-end
+POLY_GROUP["adi"] = @benchmarkable PolyBench.kernel_adi(100,$(get_zero_2d()),$(get_zero_2d()),$(get_zero_2d()),$(get_zero_2d()))
+POLY_GROUP["fdtd_2d"] = @benchmarkable PolyBench.kernel_fdtd_2d($(get_zero_2d()),$(get_zero_2d()),$(get_zero_2d()),$(get_zero_1d()))
+POLY_GROUP["head_3d"] = @benchmarkable PolyBench.kernel_head_3d(1,$(get_zero_3d()),$(get_zero_3d()))
+POLY_GROUP["jacobi_1d"] = @benchmarkable PolyBench.kernel_jacobi_1d(100,$(get_zero_1d()),$(get_zero_1d()))
+POLY_GROUP["jacobi_2d"] = @benchmarkable PolyBench.kernel_jacobi_2d(100,$(get_zero_2d()),$(get_zero_2d()))
+POLY_GROUP["seidel_2d"] = @benchmarkable PolyBench.kernel_seidel_2d(100,$(get_zero_2d()))
 
 end # module
