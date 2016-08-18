@@ -19,7 +19,7 @@ end
 let
     n = 2000
 
-    A = zeros(Float32,n, n)
+    A = zeros(Float32, n, n)
 
     for i = 1:n
         for j = 1:i

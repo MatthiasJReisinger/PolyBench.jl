@@ -12,6 +12,9 @@ let
     m = 1000
     n = 1200
 
+    A = zeros(Float32,m,m)
+    B = zeros(Float32,m,n)
+
     alpha = 1.5
     for i = 1:m
         for j = 1:(i-1)
@@ -23,5 +26,5 @@ let
         end
     end
 
-    SUITE["trmm"] = @benchmarkable kernel_trmm($alpha, $beta, $A, $B)
+    SUITE["trmm"] = @benchmarkable kernel_trmm($alpha, $A, $B)
 end

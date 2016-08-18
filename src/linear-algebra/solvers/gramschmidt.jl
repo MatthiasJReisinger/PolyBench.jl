@@ -31,10 +31,10 @@ let
 
     for i = 1:m, j = 1:n
         A[i,j] = ((((i*j) % m) / m )*100) + 10
-        Q[i,j] = 0.0
+        Q[i,j] = zero(eltype(Q))
     end
     for i = 1:n, j = 1:n
-        R[i][j] = 0.0
+        R[i,j] = zero(eltype(Q))
     end
 
     SUITE["gramschmidt"] = @benchmarkable kernel_gramschmidt($A, $R, $Q)

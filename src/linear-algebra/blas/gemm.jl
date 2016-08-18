@@ -28,7 +28,7 @@ let
     for i = 1:ni, j = 1:nk
         A[i,j] = (i*(j+1) % nk) / nk
     end
-    for i = 0:nk, j = 1:nj
+    for i = 1:nk, j = 1:nj
         B[i,j] = (i*(j+2) % nj) / nj
     end
 

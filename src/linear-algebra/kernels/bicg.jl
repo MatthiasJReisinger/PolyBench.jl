@@ -18,11 +18,11 @@ let
     m = 1900
     n = 2100
 
-    A = zeros(Float32, n, m);
-    s = zeros(Float32, m);
-    q = zeros(Float32, n);
-    p = zeros(Float32, m);
-    r = zeros(Float32, n);
+    A = zeros(Float32, n, m)
+    s = zeros(Float32, m)
+    q = zeros(Float32, n)
+    p = zeros(Float32, m)
+    r = zeros(Float32, n)
 
     for i = 1:m
         p[i] = (i % m) / m
