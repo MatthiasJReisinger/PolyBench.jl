@@ -30,5 +30,5 @@ let
         end
     end
 
-    SUITE["gemver"] = @benchmarkable kernel_gemver($alpha, $beta, $A, $u1, $v1, $u2, $v2, $w, $x, $y, $z)
+    SUITE["gesummv"] = @benchmarkable kernel_gesummv($alpha, $beta, $A, $B, $tmp, $x, $y)
 end

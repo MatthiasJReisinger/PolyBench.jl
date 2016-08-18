@@ -18,8 +18,8 @@ let
     A = zeros(Float32,m,m)
     B = zeros(Float32,m,n)
 
-    alpha = 1.5;
-    beta = 1.2;
+    alpha = 1.5
+    beta = 1.2
     for i = 1:m, j = 1:n
         C[i,j] = ((i+j) % 100) / m
         B[i,j] = ((n+i-j) % 100) / m
@@ -28,8 +28,8 @@ let
         for j = 1:i
             A[i,j] = ((i+j) % 100) / m
         end
-        for (j = i+1:m)
-            A[i,j] = -999; # regions of arrays that should not be used
+        for j = i+1:m
+            A[i,j] = -999 # regions of arrays that should not be used
         end
     end
 

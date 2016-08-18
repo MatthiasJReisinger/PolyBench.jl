@@ -53,7 +53,7 @@ let
     float_n = n;
 
     for i = 1:n, j = 1:m
-        data[i,j] = (i*j)/M + i
+        data[i,j] = (i*j)/m + i
     end
 
     SUITE["correlation"] = @benchmarkable kernel_correlation($float_n, $data, $corr, $mean, $stddev)
