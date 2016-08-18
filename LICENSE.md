@@ -1,4 +1,4 @@
-The PollyBenchmarks.jl package is licensed under the MIT "Expat" License:
+The PolyBench.jl package is licensed under the MIT "Expat" License:
 
 > Copyright (c) 2016: Matthias Reisinger.
 > 
