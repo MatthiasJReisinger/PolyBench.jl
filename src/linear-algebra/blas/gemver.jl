@@ -49,5 +49,5 @@ let
         end
     end
 
-    SUITE["gemver"] = @benchmarkable kernel_gemver($alpha, $beta, $A, $u1, $v1, $u2, $v2, $w, $x, $y, $z)
+    SUITE["gemver"] = @benchmarkable kernel_gemver($alpha, $beta, A, u1, v1, u2, v2, w, x, y, z) setup = (A = copy($A); u1 = copy($u1); v1 = copy($v1); u2 = copy($u2); v2 = copy($v2); w = copy($w); x = copy($x); y = copy($y); z = copy($z))
 end

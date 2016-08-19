@@ -45,7 +45,7 @@ let
         D[i,j] = (i * (j + 2) % nk) / nk
     end
 
-    SUITE["2mm"] = @benchmarkable kernel_2mm($alpha, $beta, $tmp, $A, $B, $C, $D)
+    SUITE["2mm"] = @benchmarkable kernel_2mm($alpha, $beta, tmp, A, B, C, D) setup = (tmp = copy($tmp); A = copy($A); B = copy($B); C = copy($C); D = copy($D))
 end
 
 

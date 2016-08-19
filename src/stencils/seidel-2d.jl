@@ -16,5 +16,5 @@ let
         A[i,j] = (i*(j+2) + 2) / n
     end
 
-    SUITE["seidel_2d"] = @benchmarkable kernel_seidel_2d($tsteps, $A)
+    SUITE["seidel_2d"] = @benchmarkable kernel_seidel_2d($tsteps, A) setup = (A = copy($A))
 end

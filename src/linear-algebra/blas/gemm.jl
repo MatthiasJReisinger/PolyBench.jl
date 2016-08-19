@@ -32,5 +32,5 @@ let
         B[i,j] = (i*(j+2) % nj) / nj
     end
 
-    SUITE["gemm"] = @benchmarkable kernel_gemm($alpha, $beta, $C, $A, $B)
+    SUITE["gemm"] = @benchmarkable kernel_gemm($alpha, $beta, C, A, B) setup = (C = copy($C); A = copy($A); B = copy($B))
 end

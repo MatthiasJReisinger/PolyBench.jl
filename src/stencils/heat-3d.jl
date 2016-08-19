@@ -28,5 +28,5 @@ let
         A[i,j,k] = B[i,j,k] = (i + j + (n-k))* 10 / (n)
     end
 
-    SUITE["heat-3d"] = @benchmarkable kernel_heat_3d($tsteps, $A, $B)
+    SUITE["heat-3d"] = @benchmarkable kernel_heat_3d($tsteps, A, B) setup = (A = copy($A); B = copy($B))
 end

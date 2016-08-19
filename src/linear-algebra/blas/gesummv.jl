@@ -30,5 +30,5 @@ let
         end
     end
 
-    SUITE["gesummv"] = @benchmarkable kernel_gesummv($alpha, $beta, $A, $B, $tmp, $x, $y)
+    SUITE["gesummv"] = @benchmarkable kernel_gesummv($alpha, $beta, A, B, tmp, x, y) setup = (A = copy($A); B = copy($B); tmp = copy($tmp); x = copy($x); y = copy($y))
 end

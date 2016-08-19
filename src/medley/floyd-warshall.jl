@@ -16,5 +16,5 @@ let
         end
     end
 
-    SUITE["floyd-warshall"] = @benchmarkable kernel_floyd_warshall($path)
+    SUITE["floyd-warshall"] = @benchmarkable kernel_floyd_warshall(path) setup = (path = copy($path))
 end

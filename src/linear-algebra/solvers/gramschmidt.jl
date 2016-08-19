@@ -37,5 +37,5 @@ let
         R[i,j] = zero(eltype(Q))
     end
 
-    SUITE["gramschmidt"] = @benchmarkable kernel_gramschmidt($A, $R, $Q)
+    SUITE["gramschmidt"] = @benchmarkable kernel_gramschmidt(A, R, Q) setup = (A = copy($A); R = copy($R); Q = copy($Q))
 end

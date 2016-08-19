@@ -33,5 +33,5 @@ let
         r[i] = (n+1-i)
     end
 
-    SUITE["durbin"] = @benchmarkable kernel_durbin($r, $y)
+    SUITE["durbin"] = @benchmarkable kernel_durbin(r, y) setup = (r = copy($r); y = copy($y))
 end

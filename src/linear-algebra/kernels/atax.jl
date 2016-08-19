@@ -34,5 +34,5 @@ let
         A[i,j] = ((i+j) % n) / (5*m)
     end
 
-    SUITE["atax"] = @benchmarkable kernel_atax($A, $x, $y, $tmp)
+    SUITE["atax"] = @benchmarkable kernel_atax(A, x, y, tmp) setup = (A = copy($A); x = copy($x); y = copy($y); tmp = copy($tmp))
 end

@@ -30,5 +30,5 @@ let
         C4[i,j] = (i*j % np) / np
     end
 
-    SUITE["doitgen"] = @benchmarkable kernel_doitgen($A, $C4, $sum)
+    SUITE["doitgen"] = @benchmarkable kernel_doitgen(A, C4, sum) setup = (A = copy($A); C4 = copy($C4); sum = copy($sum))
 end

@@ -56,5 +56,5 @@ let
         data[i,j] = (i*j)/m + i
     end
 
-    SUITE["correlation"] = @benchmarkable kernel_correlation($float_n, $data, $corr, $mean, $stddev)
+    SUITE["correlation"] = @benchmarkable kernel_correlation($float_n, data, corr, mean, stddev) setup=(data=copy($data); corr=copy($corr); mean=copy($mean); stddev=copy($stddev))
 end

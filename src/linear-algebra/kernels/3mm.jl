@@ -58,5 +58,5 @@ let
         D[i,j] = ((i*(j+2)+2) % nk) / (5*nk)
     end
 
-    SUITE["3mm"] = @benchmarkable kernel_3mm($E, $A, $B, $F, $C, $D, $G)
+    SUITE["3mm"] = @benchmarkable kernel_3mm(E, A, B, F, C, D, G) setup = (E = copy($E); A = copy($A); B = copy($B); F = copy($F); C = copy($C); D = copy($D); G = copy($G))
 end

@@ -34,5 +34,5 @@ let
         end
     end
 
-    SUITE["bicg"] = @benchmarkable kernel_bicg($A, $s, $q, $p, $r)
+    SUITE["bicg"] = @benchmarkable kernel_bicg(A, s, q, p, r) setup = (A = copy($A); s = copy($s); q = copy($q); p = copy($p); r = copy($r))
 end

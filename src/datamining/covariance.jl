@@ -37,5 +37,5 @@ let
         data[i,j] = (i*j) / m
     end
 
-    SUITE["covariance"] = @benchmarkable kernel_covariance($float_n, $data, $cov, $mean)
+    SUITE["covariance"] = @benchmarkable kernel_covariance($float_n, data, cov, mean) setup = (data = copy($data); cov = copy($cov); mean = copy($mean))
 end

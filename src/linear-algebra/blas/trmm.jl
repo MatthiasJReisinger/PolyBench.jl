@@ -26,5 +26,5 @@ let
         end
     end
 
-    SUITE["trmm"] = @benchmarkable kernel_trmm($alpha, $A, $B)
+    SUITE["trmm"] = @benchmarkable kernel_trmm($alpha, A, B) setup = (A = copy($A); B = copy($B))
 end

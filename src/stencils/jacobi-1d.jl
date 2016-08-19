@@ -23,5 +23,5 @@ let
         B[i] = (i+ 3) / n
     end
 
-    SUITE["jacobi-1d"] = @benchmarkable kernel_jacobi_1d($tsteps, $A, $B)
+    SUITE["jacobi-1d"] = @benchmarkable kernel_jacobi_1d($tsteps, A, B) setup = (A = copy($A); B = copy($B))
 end

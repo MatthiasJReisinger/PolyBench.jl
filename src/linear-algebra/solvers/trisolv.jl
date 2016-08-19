@@ -24,5 +24,5 @@ let
         end
     end
 
-    SUITE["trisolv"] = @benchmarkable kernel_trisolv($L, $x, $b)
+    SUITE["trisolv"] = @benchmarkable kernel_trisolv(L, x, b) setup = (L = copy($L); x = copy($x); b = copy($b))
 end

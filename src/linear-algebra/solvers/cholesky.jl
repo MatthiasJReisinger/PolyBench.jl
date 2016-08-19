@@ -45,5 +45,5 @@ let
         end
     end
 
-    SUITE["cholesky"] = @benchmarkable kernel_cholesky($A)
+    SUITE["cholesky"] = @benchmarkable kernel_cholesky(A) setup = (A = copy($A))
 end

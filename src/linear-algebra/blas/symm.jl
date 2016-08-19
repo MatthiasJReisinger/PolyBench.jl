@@ -33,5 +33,5 @@ let
         end
     end
 
-    SUITE["symm"] = @benchmarkable kernel_symm($alpha, $beta, $C, $A, $B)
+    SUITE["symm"] = @benchmarkable kernel_symm($alpha, $beta, C, A, B) setup = (C = copy($C); A = copy($A); B = copy($B))
 end

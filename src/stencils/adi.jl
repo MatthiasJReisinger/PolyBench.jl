@@ -64,5 +64,5 @@ let
         u[i,j] =  (i + n-j) / n
     end
 
-    SUITE["adi"] = @benchmarkable kernel_adi($tsteps, $u, $v, $p, $q)
+    SUITE["adi"] = @benchmarkable kernel_adi($tsteps, u, v, p, q) setup = (u = copy($u); v = copy($v); p = copy($p); q = copy($q))
 end

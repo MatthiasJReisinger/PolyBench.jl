@@ -76,5 +76,5 @@ let
         end
     end
 
-    SUITE["ludcmp"] = @benchmarkable kernel_ludcmp($A, $b, $x, $y)
+    SUITE["ludcmp"] = @benchmarkable kernel_ludcmp(A, b, x, y) setup = (A = copy($A); b = copy($b); x = copy($x); y = copy($y))
 end

@@ -43,5 +43,5 @@ let
         end
     end
 
-    SUITE["lu"] = @benchmarkable kernel_lu($A)
+    SUITE["lu"] = @benchmarkable kernel_lu(A) setup = (A = copy($A))
 end

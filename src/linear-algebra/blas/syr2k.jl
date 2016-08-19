@@ -28,5 +28,5 @@ let
         C[i,j] = ((i*j+3)%n) / m
     end
 
-    SUITE["syr2k"] = @benchmarkable kernel_syr2k($alpha, $beta, $C, $A, $B)
+    SUITE["syr2k"] = @benchmarkable kernel_syr2k($alpha, $beta, C, A, B) setup = (C = copy($C); A = copy($A); B = copy($B))
 end

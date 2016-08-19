@@ -37,5 +37,5 @@ let
         hz[i,j] = (i*(j+3)) / nx
     end
 
-    SUITE["fdtd-2d"] = @benchmarkable kernel_fdtd_2d($ex, $ey, $hz, $_fict_)
+    SUITE["fdtd-2d"] = @benchmarkable kernel_fdtd_2d(ex, ey, hz, _fict_) setup = (ex = copy($ex); ey = copy($ey); hz = copy($hz); _fict_ = copy($_fict_))
 end

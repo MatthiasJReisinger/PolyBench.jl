@@ -88,5 +88,5 @@ let
         imgIn[i,j] = ((313*i+991*j)%65536) / 65535.0
     end
 
-    SUITE["deriche"] = @benchmarkable kernel_deriche($alpha, $imgIn, $imgOut, $y1, $y2)
+    SUITE["deriche"] = @benchmarkable kernel_deriche($alpha, imgIn, imgOut, y1, y2) setup = (imgIn = copy($imgIn); imgOut = copy($imgOut); y1 = copy($y1); y2 = copy($y2))
 end

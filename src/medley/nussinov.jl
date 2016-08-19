@@ -40,5 +40,5 @@ let
         table[i,j] = 0
     end
 
-    SUITE["nussionv"] = @benchmarkable kernel_nussinov($seq, $table)
+    SUITE["nussionv"] = @benchmarkable kernel_nussinov(seq, table) setup = (seq = copy($seq); table = copy($table))
 end
