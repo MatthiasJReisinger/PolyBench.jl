@@ -12,7 +12,7 @@
         for k = 1:(i-1)
             A[i,i] -= A[i,k] * A[i,k]
         end
-        A[i,i] = sqrt(A[i,i])
+        @fastmath A[i,i] = sqrt(A[i,i])
     end
 end
 

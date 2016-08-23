@@ -30,10 +30,10 @@ let
     y = zeros(Float32, n)
     z = zeros(Float32, n)
 
-    alpha = 1.5
-    beta = 1.2
+    alpha = Float32(1.5)
+    beta = Float32(1.2)
 
-    fn = n
+    fn = Float32(n)
 
     for i = 1:n
         u1[i] = i;

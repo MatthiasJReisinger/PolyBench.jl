@@ -18,8 +18,8 @@ let
     A = zeros(Float32,m,m)
     B = zeros(Float32,m,n)
 
-    alpha = 1.5
-    beta = 1.2
+    alpha = Float32(1.5)
+    beta = Float32(1.2)
     for i = 1:m, j = 1:n
         C[i,j] = ((i+j) % 100) / m
         B[i,j] = ((n+i-j) % 100) / m

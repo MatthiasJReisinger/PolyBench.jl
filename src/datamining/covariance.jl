@@ -31,7 +31,7 @@ let
     cov = zeros(Float32,m,m)
     mean = zeros(Float32,m)
 
-    float_n = n
+    float_n = Float32(n)
 
     for i = 1:n, j = 1:m
         data[i,j] = (i*j) / m

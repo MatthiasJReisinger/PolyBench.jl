@@ -10,7 +10,7 @@
             table[i,j] = max(table[i,j], table[i+1,j])
         end
 
-        if (j-1) >= 1 && (i+1) <= n
+        if ((j-1) >= 1) & ((i+1) <= n)
             # don't allow adjacent elements to bond */
             if (i < j-1)
                 table[i,j] = max(table[i,j], table[i+1,j-1] + (seq[i] + seq[j] == 3 ? 1 : 0))
@@ -40,5 +40,5 @@ let
         table[i,j] = 0
     end
 
-    SUITE["nussionv"] = @benchmarkable kernel_nussinov(seq, table) setup = (seq = copy($seq); table = copy($table))
+    SUITE["nussinov"] = @benchmarkable kernel_nussinov(seq, table) setup = (seq = copy($seq); table = copy($table))
 end

@@ -16,14 +16,14 @@
             stddev[j] += (data[i,j] - mean[j]) * (data[i,j] - mean[j])
         end
         stddev[j] /= float_n
-        stddev[j] = sqrt(stddev[j])
+        @fastmath stddev[j] = sqrt(stddev[j])
         stddev[j] = stddev[j] <= eps ? one(eltype(stddev)) : stddev[j]
     end
 
     # Center and reduce the column vectors.
     for i = 1:n, j = 1:m
         data[i,j] -= mean[j]
-        data[i,j] /= sqrt(float_n) * stddev[j]
+        @fastmath data[i,j] /= sqrt(float_n) * stddev[j]
     end
 
     # Calculate the m * m correlation matrix.
@@ -50,7 +50,7 @@ let
     mean = zeros(Float32,m)
     stddev = zeros(Float32,m)
 
-    float_n = n;
+    float_n = Float32(n);
 
     for i = 1:n, j = 1:m
         data[i,j] = (i*j)/m + i

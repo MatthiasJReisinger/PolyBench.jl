@@ -20,8 +20,8 @@ let
     x = zeros(Float32, n)
     y = zeros(Float32, n)
 
-    alpha = 1.5
-    beta = 1.2
+    alpha = Float32(1.5)
+    beta = Float32(1.2)
     for i = 1:n
         x[i] = (i % n) / n
         for j = 1:n

@@ -27,5 +27,5 @@ let
         end
     end
 
-    SUITE["mv"] = @benchmarkable kernel_mvt(x1, x2, y1, y2, A) setup = (x1 = copy($x1); x2 = copy($x2); y1 = copy($y1); y2 = copy($y2); A = copy($A))
+    SUITE["mvt"] = @benchmarkable kernel_mvt(x1, x2, y1, y2, A) setup = (x1 = copy($x1); x2 = copy($x2); y1 = copy($y1); y2 = copy($y2); A = copy($A))
 end

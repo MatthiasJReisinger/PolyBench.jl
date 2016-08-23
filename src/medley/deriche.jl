@@ -81,7 +81,7 @@ let
     y1 = zeros(Float32, w, h)
     y2 = zeros(Float32, w, h)
 
-    alpha=0.25 # parameter of the filter
+    alpha = Float32(0.25) # parameter of the filter
 
     # input should be between 0 and 1 (grayscale image pixel)
     for i = 1:w, j = 1:h

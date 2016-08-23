@@ -29,8 +29,8 @@ let
     C = zeros(Float32,nj,nl)
     D = zeros(Float32,ni,nl)
 
-    alpha = 1.5
-    beta = 1.2
+    alpha = Float32(1.5)
+    beta = Float32(1.2)
 
     for i = 1:ni, j = 1:nk
         A[i,j] = ((i * j + 1) % ni) / ni

@@ -5,7 +5,7 @@
         for i = 1:m
             nrm += A[i,k] * A[i,k]
         end
-        R[k,k] = sqrt(nrm)
+        @fastmath R[k,k] = sqrt(nrm)
         for i = 1:m
             Q[i,k] = A[i,k] / R[k,k]
         end

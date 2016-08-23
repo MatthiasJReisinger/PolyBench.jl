@@ -43,7 +43,7 @@ let
     x = zeros(Float32, n)
     y = zeros(Float32, n)
 
-    fn = n
+    fn = Float32(n)
 
     for i = 1:n
         x[i] = 0
