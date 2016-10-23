@@ -15,6 +15,17 @@ end
 
 end
 
+@polly function cnn_backward(err_out, W, err_in, nu, nv)
+	nn,nk,np,nq = size(err_out)
+	nc,nh,nw = size(err_in)[2:end]
+	nr,ns = size(W)[3:end]
+
+	for n=1:nn, c=1:nc, h=1:nh, w=1:nw, k=1:nk, r=1:nr, s=1:ns, p=1:np, q=1:nq
+		if (nu*p - (h - nr + r)==0) && (nv*q - (w - ns + s))			err_in[n,c,h,w] += W[k,c,r,s] * err_out[n,k,p,q] 		end
+	end
+
+end
+
 let
 	nn = 50
 	nk = 40
@@ -39,6 +50,6 @@ let
 #println("done (took $run_time) seconds")
 	#init_array
 
-	SUITE["cnn"] =@benchmarkable cnn_forward(inp_F,W,out_F, $nu, $nv) setup = (inp_F = copy($inp_F); W = copy($W); out_F = copy($out_F))
+	SUITE["cnn"] =@benchmarkable cnn_forward(inp_F,W,out_F, $nu, $nv) cnn_backward(err_out, W, err_in, $nu, $nv) (setup = (inp_F = copy($inp_F); W = copy($W); out_F = copy($out_F); err_out = copy($err_out); err_in = copy($err_in))
 
 end
