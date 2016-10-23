@@ -39,5 +39,6 @@ let
 #println("done (took $run_time) seconds")
 	#init_array
 
-	SUITE["cnn"] =@benchmarkable cnn_forward(inp_F,W,out_F, nu, nv) setup= (inp_F = copy($inp_F); W = copy($W); out_F = copy($out_F), nu, nv)
+	SUITE["cnn"] =@benchmarkable cnn_forward(inp_F,W,out_F, $nu, $nv) setup = (inp_F = copy($inp_F); W = copy($W); out_F = copy($out_F))
+
 end
