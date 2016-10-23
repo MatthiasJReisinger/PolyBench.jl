@@ -21,7 +21,7 @@ end
 	nr,ns = size(W)[3:end]
 
 	for n=1:nn, c=1:nc, h=1:nh, w=1:nw, k=1:nk, r=1:nr, s=1:ns, p=1:np, q=1:nq
-		if (nu*p - (h - nr + r)==0) && (nv*q - (w - ns + s))			err_in[n,c,h,w] += W[k,c,r,s] * err_out[n,k,p,q] 		end
+		if (nu*p - (h - nr + r)==0) && (nv*q - (w - ns + s)==0)			err_in[n,c,h,w] += W[k,c,r,s] * err_out[n,k,p,q] 		end
 	end
 
 end
